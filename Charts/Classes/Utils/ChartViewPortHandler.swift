@@ -103,7 +103,7 @@ public class ChartViewPortHandler: NSObject
     
     public var offsetLeft: CGFloat
     {
-        return _contentRect.origin.x
+        return _contentRect.origin.x + 20
     }
     
     public var offsetRight: CGFloat
@@ -128,12 +128,12 @@ public class ChartViewPortHandler: NSObject
     
     public var contentLeft: CGFloat
     {
-        return _contentRect.origin.x
+        return _contentRect.origin.x + 20;
     }
     
     public var contentRight: CGFloat
     {
-        return _contentRect.origin.x + _contentRect.size.width
+        return _contentRect.origin.x + 20 + _contentRect.size.width - 20
     }
     
     public var contentBottom: CGFloat
@@ -143,7 +143,7 @@ public class ChartViewPortHandler: NSObject
     
     public var contentWidth: CGFloat
     {
-        return _contentRect.size.width
+        return _contentRect.size.width - 40;
     }
     
     public var contentHeight: CGFloat
@@ -155,7 +155,7 @@ public class ChartViewPortHandler: NSObject
     
     public var contentCenter: CGPoint
     {
-        return CGPoint(x: _contentRect.origin.x + _contentRect.size.width / 2.0, y: _contentRect.origin.y + _contentRect.size.height / 2.0)
+        return CGPoint(x: _contentRect.origin.x + 20 + _contentRect.size.width / 2.0, y: _contentRect.origin.y + _contentRect.size.height / 2.0)
     }
     
     public var chartHeight: CGFloat { return _chartHeight; }

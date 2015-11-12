@@ -342,9 +342,9 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             position.y = CGFloat(l.limit)
             position = CGPointApplyAffineTransform(position, trans)
             
-            _limitLineSegmentsBuffer[0].x = viewPortHandler.contentLeft
+            _limitLineSegmentsBuffer[0].x = viewPortHandler.contentLeft - 20
             _limitLineSegmentsBuffer[0].y = position.y
-            _limitLineSegmentsBuffer[1].x = viewPortHandler.contentRight
+            _limitLineSegmentsBuffer[1].x = viewPortHandler.contentRight - 20 - 2
             _limitLineSegmentsBuffer[1].y = position.y
             
             CGContextSetStrokeColorWithColor(context, l.lineColor.CGColor)
@@ -402,13 +402,30 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
                 }
                 else
                 {
+//                    ChartUtils.drawText(context: context,
+//                        text: label,
+//                        point: CGPoint(
+//                            x: viewPortHandler.contentLeft + xOffset,
+//                            y: position.y + yOffset - labelLineHeight),
+//                        align: .Left,
+//                        attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
                     ChartUtils.drawText(context: context,
                         text: label,
                         point: CGPoint(
-                            x: viewPortHandler.contentLeft + xOffset,
-                            y: position.y + yOffset - labelLineHeight),
+                            x: viewPortHandler.contentLeft - 20,
+                            y: position.y + yOffset - labelLineHeight - 7),
                         align: .Left,
                         attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
+                    
+                    ChartUtils.drawText(context: context,
+                        text: l.additionalLabel,
+                        point: CGPoint(
+                            x: viewPortHandler.contentRight + 1,
+                            y: position.y - labelLineHeight/2),
+                        align: .Right,
+                        attributes: [NSFontAttributeName: l.additionalValueFont, NSForegroundColorAttributeName: l.additionalValueTextColor])
+                    
+                    
                 }
             }
         }

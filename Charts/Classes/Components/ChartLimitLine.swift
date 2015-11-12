@@ -36,8 +36,14 @@ public class ChartLimitLine: ChartComponentBase
     public var lineDashPhase = CGFloat(0.0)
     public var lineDashLengths: [CGFloat]?
     public var valueTextColor = UIColor.blackColor()
+    public var additionalValueTextColor = UIColor.blackColor()
+
+    
     public var valueFont = UIFont.systemFontOfSize(13.0)
+    public var additionalValueFont = UIFont.systemFontOfSize(13.0)
+
     public var label = ""
+    public var additionalLabel = "";
     public var labelPosition = ChartLimitLabelPosition.RightTop
     
     public override init()
