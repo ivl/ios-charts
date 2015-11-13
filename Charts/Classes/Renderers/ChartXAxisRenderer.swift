@@ -191,7 +191,7 @@ public class ChartXAxisRenderer: ChartAxisRendererBase
                     }
                 }
                 
-                drawLabel(context: context, label: label!, xIndex: i, x: position.x, y: pos, attributes: labelAttrs, constrainedToSize: labelMaxSize, anchor: anchor, angleRadians: labelRotationAngleRadians)
+                drawLabel(context: context, label: label!, xIndex: i, x: position.x, y: pos - 5, attributes: labelAttrs, constrainedToSize: labelMaxSize, anchor: anchor, angleRadians: labelRotationAngleRadians)
             }
         }
     }
