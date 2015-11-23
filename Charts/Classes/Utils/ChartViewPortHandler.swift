@@ -56,6 +56,13 @@ public class ChartViewPortHandler: NSObject
     /// offset that allows the chart to be dragged over its bounds on the x-axis
     private var _transOffsetY = CGFloat(0.0)
     
+    
+    
+    private var _leftAxisAdditionalLeading = CGFloat(0.0)
+    private var _topAxisAdditionalTop = CGFloat(0.0)
+    private var _rightAxisAdditionalTrailing = CGFloat(0.0)
+    private var _bottomAxisAdditionalBottom = CGFloat(0.0)
+    
     public override init()
     {
     }
@@ -101,61 +108,88 @@ public class ChartViewPortHandler: NSObject
         _contentRect.size.height = _chartHeight - offsetBottom - offsetTop
     }
     
+    public func addAdditionalContentMargins(offsetLeft offsetLeft: CGFloat, offsetTop: CGFloat, offsetRight: CGFloat, offsetBottom: CGFloat)
+    {
+        _leftAxisAdditionalLeading = offsetLeft
+        _topAxisAdditionalTop = offsetTop
+        _rightAxisAdditionalTrailing = offsetRight
+        _bottomAxisAdditionalBottom = offsetBottom
+    }
+    
+    public var additionalLeftContentMargin: CGFloat
+    {
+            return _leftAxisAdditionalLeading
+    }
+    public var additionalRightContentMargin: CGFloat
+    {
+            return _rightAxisAdditionalTrailing
+    }
+
+    public var additionalTopContentMargin: CGFloat
+    {
+        return _topAxisAdditionalTop
+    }
+    public var additionalBottomContentMargin: CGFloat
+    {
+        return _bottomAxisAdditionalBottom
+    }
+    
     public var offsetLeft: CGFloat
     {
-        return _contentRect.origin.x + 20
+            return _contentRect.origin.x + _leftAxisAdditionalLeading
     }
     
     public var offsetRight: CGFloat
     {
-        return _chartWidth - _contentRect.size.width - _contentRect.origin.x
+        return _chartWidth - _contentRect.size.width - _contentRect.origin.x + _leftAxisAdditionalLeading - _rightAxisAdditionalTrailing
     }
     
     public var offsetTop: CGFloat
     {
-        return _contentRect.origin.y
+        return _contentRect.origin.y + _topAxisAdditionalTop;
     }
     
     public var offsetBottom: CGFloat
     {
-        return _chartHeight - _contentRect.size.height - _contentRect.origin.y
+        return _chartHeight - _contentRect.size.height - _contentRect.origin.y + _topAxisAdditionalTop - _bottomAxisAdditionalBottom
     }
     
     public var contentTop: CGFloat
     {
-        return _contentRect.origin.y
+        return _contentRect.origin.y + _topAxisAdditionalTop
     }
     
     public var contentLeft: CGFloat
     {
-        return _contentRect.origin.x + 20;
+        return _contentRect.origin.x + _leftAxisAdditionalLeading
     }
     
     public var contentRight: CGFloat
     {
-        return _contentRect.origin.x + 20 + _contentRect.size.width - 20
+        return _contentRect.origin.x + _leftAxisAdditionalLeading +
+            _contentRect.size.width - _rightAxisAdditionalTrailing
     }
     
     public var contentBottom: CGFloat
     {
-        return _contentRect.origin.y + _contentRect.size.height
+        return _contentRect.origin.y + _contentRect.size.height - _bottomAxisAdditionalBottom
     }
     
     public var contentWidth: CGFloat
     {
-        return _contentRect.size.width - 40;
+        return _contentRect.size.width - (_leftAxisAdditionalLeading + _rightAxisAdditionalTrailing)
     }
     
     public var contentHeight: CGFloat
     {
-        return _contentRect.size.height
+        return _contentRect.size.height - (_topAxisAdditionalTop + _bottomAxisAdditionalBottom)
     }
     
     public var contentRect: CGRect { return _contentRect; }
     
     public var contentCenter: CGPoint
     {
-        return CGPoint(x: _contentRect.origin.x + 20 + _contentRect.size.width / 2.0, y: _contentRect.origin.y + _contentRect.size.height / 2.0)
+        return CGPoint(x: _contentRect.origin.x + _contentRect.size.width / 2.0, y: _contentRect.origin.y + _contentRect.size.height / 2.0)
     }
     
     public var chartHeight: CGFloat { return _chartHeight; }

@@ -342,9 +342,9 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             position.y = CGFloat(l.limit)
             position = CGPointApplyAffineTransform(position, trans)
             
-            _limitLineSegmentsBuffer[0].x = viewPortHandler.contentLeft - 20
+            _limitLineSegmentsBuffer[0].x = viewPortHandler.contentLeft - viewPortHandler.additionalLeftContentMargin
             _limitLineSegmentsBuffer[0].y = position.y
-            _limitLineSegmentsBuffer[1].x = viewPortHandler.contentRight - 20 - 2
+            _limitLineSegmentsBuffer[1].x = viewPortHandler.contentRight - viewPortHandler.additionalRightContentMargin - 2
             _limitLineSegmentsBuffer[1].y = position.y
             
             CGContextSetStrokeColorWithColor(context, l.lineColor.CGColor)
@@ -412,7 +412,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
                     ChartUtils.drawText(context: context,
                         text: label,
                         point: CGPoint(
-                            x: viewPortHandler.contentLeft - 20,
+                            x: viewPortHandler.contentLeft - viewPortHandler.additionalLeftContentMargin,
                             y: position.y + yOffset - labelLineHeight - 7),
                         align: .Left,
                         attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
