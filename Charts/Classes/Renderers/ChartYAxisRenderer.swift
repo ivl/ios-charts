@@ -61,7 +61,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         
         let labelCount = _yAxis.labelCount
         let range = abs(yMax - yMin)
-    
+        
         if (labelCount == 0 || range <= 0)
         {
             _yAxis.entries = [Double]()
@@ -107,40 +107,40 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         {
             // no forced count
             
-        // if the labels should only show min and max
-        if (_yAxis.isShowOnlyMinMaxEnabled)
-        {
-            _yAxis.entries = [yMin, yMax]
+            // if the labels should only show min and max
+            if (_yAxis.isShowOnlyMinMaxEnabled)
+            {
+                _yAxis.entries = [yMin, yMax]
+            }
+            else
+            {
+                let first = ceil(Double(yMin) / interval) * interval
+                let last = ChartUtils.nextUp(floor(Double(yMax) / interval) * interval)
+                
+                var f: Double
+                var i: Int
+                var n = 0
+                for (f = first; f <= last; f += interval)
+                {
+                    ++n
+                }
+                
+                if (_yAxis.entries.count < n)
+                {
+                    // Ensure stops contains at least numStops elements.
+                    _yAxis.entries = [Double](count: n, repeatedValue: 0.0)
+                }
+                else if (_yAxis.entries.count > n)
+                {
+                    _yAxis.entries.removeRange(n..<_yAxis.entries.count)
+                }
+                
+                for (f = first, i = 0; i < n; f += interval, ++i)
+                {
+                    _yAxis.entries[i] = Double(f)
+                }
+            }
         }
-        else
-        {
-            let first = ceil(Double(yMin) / interval) * interval
-            let last = ChartUtils.nextUp(floor(Double(yMax) / interval) * interval)
-            
-            var f: Double
-            var i: Int
-            var n = 0
-            for (f = first; f <= last; f += interval)
-            {
-                ++n
-            }
-            
-            if (_yAxis.entries.count < n)
-            {
-                // Ensure stops contains at least numStops elements.
-                _yAxis.entries = [Double](count: n, repeatedValue: 0.0)
-            }
-            else if (_yAxis.entries.count > n)
-            {
-                _yAxis.entries.removeRange(n..<_yAxis.entries.count)
-            }
-            
-            for (f = first, i = 0; i < n; f += interval, ++i)
-            {
-                _yAxis.entries[i] = Double(f)
-            }
-        }
-    }
     }
     
     /// draws the y-axis labels to the screen
@@ -274,12 +274,12 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         }
         
         CGContextSaveGState(context)
-
+        
         if (!_yAxis.gridAntialiasEnabled)
         {
             CGContextSetShouldAntialias(context, false)
         }
-
+        
         CGContextSetStrokeColorWithColor(context, _yAxis.gridColor.CGColor)
         CGContextSetLineWidth(context, _yAxis.gridLineWidth)
         if (_yAxis.gridLineDashLengths != nil)
@@ -301,7 +301,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             position.x = 0.0
             position.y = CGFloat(_yAxis.entries[i])
             position = CGPointApplyAffineTransform(position, valueToPixelMatrix)
-        
+            
             _gridLineBuffer[0].x = viewPortHandler.contentLeft
             _gridLineBuffer[0].y = position.y
             _gridLineBuffer[1].x = viewPortHandler.contentRight
@@ -342,9 +342,13 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             position.y = CGFloat(l.limit)
             position = CGPointApplyAffineTransform(position, trans)
             
-            _limitLineSegmentsBuffer[0].x = viewPortHandler.contentLeft - viewPortHandler.additionalLeftContentMargin
+            let xbeg = l.labelPosition == .LeftBottomOutside ? viewPortHandler.additionalLeftContentMargin : 0
+            
+            let xend = l.labelPosition == .LeftBottomOutside ? (viewPortHandler.additionalRightContentMargin - 2) : 0
+            
+            _limitLineSegmentsBuffer[0].x = viewPortHandler.contentLeft - xbeg
             _limitLineSegmentsBuffer[0].y = position.y
-            _limitLineSegmentsBuffer[1].x = viewPortHandler.contentRight - viewPortHandler.additionalRightContentMargin - 2
+            _limitLineSegmentsBuffer[1].x = viewPortHandler.contentRight - xend
             _limitLineSegmentsBuffer[1].y = position.y
             
             CGContextSetStrokeColorWithColor(context, l.lineColor.CGColor)
@@ -367,53 +371,16 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
             {
                 let labelLineHeight = l.valueFont.lineHeight
                 
-                let xOffset: CGFloat = 4.0 + l.xOffset
+                //let xOffset: CGFloat = 4.0 + l.xOffset
                 let yOffset: CGFloat = l.lineWidth + labelLineHeight + l.yOffset
                 
-                if (l.labelPosition == .RightTop)
+                if (l.labelPosition == .LeftBottomOutside)
                 {
-                    ChartUtils.drawText(context: context,
-                        text: label,
-                        point: CGPoint(
-                            x: viewPortHandler.contentRight - xOffset,
-                            y: position.y - yOffset),
-                        align: .Right,
-                        attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
-                }
-                else if (l.labelPosition == .RightBottom)
-                {
-                    ChartUtils.drawText(context: context,
-                        text: label,
-                        point: CGPoint(
-                            x: viewPortHandler.contentRight - xOffset,
-                            y: position.y + yOffset - labelLineHeight),
-                        align: .Right,
-                        attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
-                }
-                else if (l.labelPosition == .LeftTop)
-                {
-                    ChartUtils.drawText(context: context,
-                        text: label,
-                        point: CGPoint(
-                            x: viewPortHandler.contentLeft + xOffset,
-                            y: position.y - yOffset),
-                        align: .Left,
-                        attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
-                }
-                else
-                {
-//                    ChartUtils.drawText(context: context,
-//                        text: label,
-//                        point: CGPoint(
-//                            x: viewPortHandler.contentLeft + xOffset,
-//                            y: position.y + yOffset - labelLineHeight),
-//                        align: .Left,
-//                        attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
                     ChartUtils.drawText(context: context,
                         text: label,
                         point: CGPoint(
                             x: viewPortHandler.contentLeft - viewPortHandler.additionalLeftContentMargin,
-                            y: position.y + yOffset - labelLineHeight - 7),
+                            y: position.y  + yOffset - labelLineHeight - 7),
                         align: .Left,
                         attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
                     
@@ -424,8 +391,24 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
                             y: position.y - labelLineHeight/2),
                         align: .Right,
                         attributes: [NSFontAttributeName: l.additionalValueFont, NSForegroundColorAttributeName: l.additionalValueTextColor])
+                }
+                else if (l.labelPosition == .LeftCenterOutside)
+                {
+                    ChartUtils.drawText(context: context,
+                        text: label,
+                        point: CGPoint(
+                            x: viewPortHandler.contentLeft - viewPortHandler.additionalLeftContentMargin+5,
+                            y: position.y  - labelLineHeight/2),
+                        align: .Left,
+                        attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
                     
-                    
+                    ChartUtils.drawText(context: context,
+                        text: l.additionalLabel,
+                        point: CGPoint(
+                            x: viewPortHandler.contentRight + 1,
+                            y: position.y - labelLineHeight/2),
+                        align: .Right,
+                        attributes: [NSFontAttributeName: l.additionalValueFont, NSForegroundColorAttributeName: l.additionalValueTextColor])
                 }
             }
         }

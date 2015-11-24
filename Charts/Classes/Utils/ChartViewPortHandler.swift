@@ -77,15 +77,15 @@ public class ChartViewPortHandler: NSObject
     
     public func setChartDimens(width width: CGFloat, height: CGFloat)
     {
-        let offsetLeft = self.offsetLeft
-        let offsetTop = self.offsetTop
-        let offsetRight = self.offsetRight
-        let offsetBottom = self.offsetBottom
+//        let offsetLeft = self.offsetLeft
+//        let offsetTop = self.offsetTop
+//        let offsetRight = self.offsetRight
+//        let offsetBottom = self.offsetBottom
         
         _chartHeight = height
         _chartWidth = width
         
-        restrainViewPort(offsetLeft: offsetLeft, offsetTop: offsetTop, offsetRight: offsetRight, offsetBottom: offsetBottom)
+        restrainViewPort(offsetLeft: 0, offsetTop: 0, offsetRight: 0, offsetBottom: 0)
     }
     
     public var hasChartDimens: Bool
@@ -136,7 +136,7 @@ public class ChartViewPortHandler: NSObject
     
     public var offsetLeft: CGFloat
     {
-            return _contentRect.origin.x + _leftAxisAdditionalLeading
+        return _contentRect.origin.x + _leftAxisAdditionalLeading
     }
     
     public var offsetRight: CGFloat
@@ -172,7 +172,7 @@ public class ChartViewPortHandler: NSObject
     
     public var contentBottom: CGFloat
     {
-        return _contentRect.origin.y + _contentRect.size.height - _bottomAxisAdditionalBottom
+        return _contentRect.origin.y + _topAxisAdditionalTop + _contentRect.size.height - _bottomAxisAdditionalBottom
     }
     
     public var contentWidth: CGFloat
@@ -189,7 +189,7 @@ public class ChartViewPortHandler: NSObject
     
     public var contentCenter: CGPoint
     {
-        return CGPoint(x: _contentRect.origin.x + _contentRect.size.width / 2.0, y: _contentRect.origin.y + _contentRect.size.height / 2.0)
+        return CGPoint(x: _contentRect.origin.x + _leftAxisAdditionalLeading +  _contentRect.size.width / 2.0, y: _contentRect.origin.y + _contentRect.size.height / 2.0)
     }
     
     public var chartHeight: CGFloat { return _chartHeight; }
