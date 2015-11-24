@@ -30,6 +30,14 @@ public class ChartLimitLine: ChartComponentBase
         case LeftBottomOutside
     }
     
+    @objc
+    public enum ChartAdditionalLimitLabelPosition: Int
+    {
+        case RightTop
+        case RightBottom
+        case RightCenterOutside
+    }
+    
     /// limit / maximum (the y-value or xIndex)
     public var limit = Double(0.0)
     
@@ -47,6 +55,7 @@ public class ChartLimitLine: ChartComponentBase
     public var label = ""
     public var additionalLabel = "";
     public var labelPosition = ChartLimitLabelPosition.RightTop
+    public var additionalLabelPosition = ChartAdditionalLimitLabelPosition.RightCenterOutside;
     
     public override init()
     {
