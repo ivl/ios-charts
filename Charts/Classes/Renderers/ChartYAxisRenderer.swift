@@ -396,7 +396,19 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
                         attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
                     
                 }
-                
+                //
+                else if (l.labelPosition == .LeftTop)
+                {
+                    ChartUtils.drawText(context: context,
+                        text: label,
+                        point: CGPoint(
+                            x: viewPortHandler.contentLeft - viewPortHandler.additionalLeftContentMargin+5,
+                            y: position.y - labelLineHeight),
+                        align: .Left,
+                        attributes: [NSFontAttributeName: l.valueFont, NSForegroundColorAttributeName: l.valueTextColor])
+                    
+                }
+                //
                 
                 //// additioanal label positioning
                 

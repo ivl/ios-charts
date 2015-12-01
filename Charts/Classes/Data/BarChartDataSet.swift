@@ -152,9 +152,9 @@ public class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet
                             _yMin = -e.negativeSum
                         }
                         
-                        if e.positiveSum > _yMax
+                        if e.maxValue > _yMax
                         {
-                            _yMax = e.positiveSum
+                            _yMax = e.maxValue
                         }
                     }
                 }

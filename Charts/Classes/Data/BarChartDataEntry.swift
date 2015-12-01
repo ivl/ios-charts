@@ -24,6 +24,8 @@ public class BarChartDataEntry: ChartDataEntry
     /// the sum of all positive values this entry (if stacked) contains
     private var _positiveSum: Double = 0.0
     
+    private var _maxValue: Double = 0.0
+    
     public required init()
     {
         super.init()
@@ -35,6 +37,7 @@ public class BarChartDataEntry: ChartDataEntry
         super.init(value: BarChartDataEntry.calcSum(values), xIndex: xIndex)
         self.values = values
         calcPosNegSum()
+        calcMax()
     }
     
     /// Constructor for normal bars (not stacked).
@@ -86,7 +89,13 @@ public class BarChartDataEntry: ChartDataEntry
     {
         return _positiveSum
     }
-
+    
+    public var maxValue: Double
+        {
+            //self.calcMax()
+            return _maxValue
+    }
+    
     public func calcPosNegSum()
     {
         if _values == nil
@@ -129,6 +138,7 @@ public class BarChartDataEntry: ChartDataEntry
             self.value = BarChartDataEntry.calcSum(newValue)
             self._values = newValue
             calcPosNegSum()
+            calcMax()
         }
     }
     
@@ -162,5 +172,23 @@ public class BarChartDataEntry: ChartDataEntry
         }
         
         return sum
+    }
+    //
+    private func calcMax()
+    {
+        if _values == nil
+        {
+            return
+        }
+        
+        _maxValue = _values![0]
+        
+        for f in _values!
+        {
+            if (f > _maxValue){
+                _maxValue = f
+            }
+        }
+        return
     }
 }

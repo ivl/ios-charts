@@ -124,13 +124,14 @@ public class BarChartRenderer: ChartDataRendererBase
                 
                 // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                 CGContextSetFillColorWithColor(context, dataSet.colorAt(j).CGColor)
-                CGContextFillRect(context, barRect)
+                
+                let integerOriginXForRect = (CGFloat)((NSInteger)(barRect.origin.x) + 1)
+                let integerWidthForRect = (CGFloat)((NSInteger)(barRect.size.width) + 1)
+                
+                CGContextFillRect(context, CGRectMake(integerOriginXForRect, barRect.origin.y, integerWidthForRect, barRect.size.height))
             }
             else
             {
-                var posY = 0.0
-                var negY = -e.negativeSum
-                var yStart = 0.0
                 
                 // if drawing the bar shadow is enabled
                 if (drawBarShadowEnabled)
@@ -173,32 +174,12 @@ public class BarChartRenderer: ChartDataRendererBase
                 {
                     let value = vals![k]
                     
-                    if value >= 0.0
-                    {
-                        y = posY
-                        yStart = posY + value
-                        posY = yStart
-                    }
-                    else
-                    {
-                        y = negY
-                        yStart = negY + abs(value)
-                        negY += abs(value)
-                    }
-                    
                     let left = x - barWidth + barSpaceHalf
                     let right = x + barWidth - barSpaceHalf
                     var top: CGFloat, bottom: CGFloat
-                    if isInverted
-                    {
-                        bottom = y >= yStart ? CGFloat(y) : CGFloat(yStart)
-                        top = y <= yStart ? CGFloat(y) : CGFloat(yStart)
-                    }
-                    else
-                    {
-                        top = y >= yStart ? CGFloat(y) : CGFloat(yStart)
-                        bottom = y <= yStart ? CGFloat(y) : CGFloat(yStart)
-                    }
+                    
+                    top = CGFloat(value)
+                    bottom = 0
                     
                     // multiply the height of the rect with the phase
                     top *= phaseY
@@ -223,9 +204,28 @@ public class BarChartRenderer: ChartDataRendererBase
                         break
                     }
                     
-                    // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
-                    CGContextSetFillColorWithColor(context, dataSet.colorAt(k).CGColor)
-                    CGContextFillRect(context, barRect)
+                    if(barRect.size.height > 0){
+                        
+                        var path: CGMutablePathRef
+                        var transform: CGAffineTransform
+                        transform = CGAffineTransformIdentity
+                        
+                        if(fabs(barRect.size.width) > fabs(barRect.size.height)) {
+                            barRect = CGRectMake(barRect.origin.x, barRect.origin.y - barRect.size.width + barRect.size.height, barRect.size.width, barRect.size.width)
+                        }
+                        
+                        path = CGPathCreateMutable()
+                        if (value == vals![0]){
+                            CGPathAddRect(path, &transform, CGRectMake(barRect.origin.x, barRect.origin.y, barRect.size.width, barRect.size.height / 2))
+                        }
+                        
+                        CGPathAddRoundedRect(path, &transform, barRect, fabs(barRect.size.width)/2, fabs(barRect.size.width)/2)
+                        CGContextAddPath(context, path)
+                        // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
+                        CGContextSetFillColorWithColor(context, dataSet.colorAt(k).CGColor)
+                        
+                        CGContextFillPath(context)
+                    }
                 }
             }
         }
